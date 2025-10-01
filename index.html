@@ -6,44 +6,87 @@
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #f4f4f9;
-      text-align: center;
+      margin: 40px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      color: #2c3e50;
     }
     .verse-box {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      max-width: 500px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
     }
-    h1 { color: #333; }
-    p { font-size: 20px; color: #555; }
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: none;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    .saved-note {
+      margin-top: 20px;
+      padding: 15px;
+      background: #ecf0f1;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
-  <div class="verse-box">
-    <h1>오늘의 말씀</h1>
-    <p id="verse"></p>
+  <h1>오늘의 말씀</h1>
+  <div class="verse-box" id="verse-box">
+    📖 오늘의 말씀: <span id="verse">요한복음 5:24 "내 말을 듣고 또 나 보내신 이를 믿는 자는 영생을 얻었고, 심판에 이르지 아니하나니 사망에서 생명으로 옮겼느니라"</span>
+  </div>
+
+  <h2>오늘의 묵상</h2>
+  <textarea id="note" placeholder="오늘 말씀에 대한 묵상을 입력해 보세요..."></textarea><br>
+  <button onclick="saveNote()">저장하기</button>
+
+  <div class="saved-note" id="saved-note" style="display:none;">
+    <h3>저장된 묵상</h3>
+    <p id="saved-text"></p>
   </div>
 
   <script>
-    // 요일별 말씀 (0=주일, 1=월, ... 6=토)
-    const verses = {
-      0: "주일: 요한복음 3:16 - 하나님이 세상을 이처럼 사랑하사...",
-      1: "월요일: 시편 23:1 - 여호와는 나의 목자시니...",
-      2: "화요일: 빌립보서 4:13 - 내게 능력 주시는 자 안에서...",
-      3: "수요일: 이사야 41:10 - 두려워하지 말라 내가 너와 함께하리라...",
-      4: "목요일: 로마서 8:28 - 하나님을 사랑하는 자들에게 모든 것이...",
-      5: "금요일: 마태복음 11:28 - 수고하고 무거운 짐 진 자들아 다 내게로...",
-      6: "토요일: 고린도전서 13:13 - 믿음, 소망, 사랑 이 세 가지는 항상 있을 것인데..."
+    // 저장된 묵상 불러오기
+    window.onload = function() {
+      const saved = localStorage.getItem("todayNote");
+      if (saved) {
+        document.getElementById("saved-note").style.display = "block";
+        document.getElementById("saved-text").innerText = saved;
+      }
     };
 
-    const today = new Date().getDay();
-    document.getElementById("verse").innerText = verses[today];
+    // 묵상 저장
+    function saveNote() {
+      const note = document.getElementById("note").value;
+      if (note.trim() !== "") {
+        localStorage.setItem("todayNote", note);
+        document.getElementById("saved-note").style.display = "block";
+        document.getElementById("saved-text").innerText = note;
+        document.getElementById("note").value = "";
+        alert("묵상이 저장되었습니다!");
+      } else {
+        alert("묵상을 입력해주세요!");
+      }
+    }
   </script>
 </body>
 </html>
