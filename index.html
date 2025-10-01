@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>오늘의 말씀</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f4f4f9;
+      text-align: center;
+    }
+    .verse-box {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      max-width: 500px;
+    }
+    h1 { color: #333; }
+    p { font-size: 20px; color: #555; }
+  </style>
+</head>
+<body>
+  <div class="verse-box">
+    <h1>오늘의 말씀</h1>
+    <p id="verse"></p>
+  </div>
+
+  <script>
+    // 요일별 말씀 (0=주일, 1=월, ... 6=토)
+    const verses = {
+      0: "주일: 요한복음 3:16 - 하나님이 세상을 이처럼 사랑하사...",
+      1: "월요일: 시편 23:1 - 여호와는 나의 목자시니...",
+      2: "화요일: 빌립보서 4:13 - 내게 능력 주시는 자 안에서...",
+      3: "수요일: 이사야 41:10 - 두려워하지 말라 내가 너와 함께하리라...",
+      4: "목요일: 로마서 8:28 - 하나님을 사랑하는 자들에게 모든 것이...",
+      5: "금요일: 마태복음 11:28 - 수고하고 무거운 짐 진 자들아 다 내게로...",
+      6: "토요일: 고린도전서 13:13 - 믿음, 소망, 사랑 이 세 가지는 항상 있을 것인데..."
+    };
+
+    const today = new Date().getDay();
+    document.getElementById("verse").innerText = verses[today];
+  </script>
+</body>
+</html>
