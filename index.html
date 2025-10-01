@@ -2,33 +2,26 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>맥체인 성경읽기</title>
+  <title>오늘의 말씀</title>
   <style>
     body {
+      font-family: "Arial", sans-serif;
       margin: 0;
-      font-family: Arial, sans-serif;
+      padding: 0;
       background-size: cover;
       background-position: center;
-      min-height: 100vh;
     }
-
-    .container {
-      background: rgba(255, 255, 255, 0.85);
-      padding: 20px;
-      border-radius: 12px;
+    #container {
       max-width: 700px;
-      margin: 100px auto; /* 위에서 조금 내려옴 */
+      margin: 50px auto;
+      padding: 20px;
+      background: rgba(255,255,255,0.85);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-
-    h1 {
+    h1, h2 {
       text-align: center;
-      margin-bottom: 10px;
     }
-
-    h2 {
-      margin-top: 20px;
-    }
-
     textarea {
       width: 100%;
       height: 150px;
@@ -36,25 +29,36 @@
       padding: 10px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      font-size: 14px;
+      resize: none;
+    }
+    button {
+      display: block;
+      margin: 15px auto;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #4CAF50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div id="container">
     <h1 id="today-date"></h1>
-    <h2>📖 맥체인 성경읽기</h2>
-    <div id="reading-plan">
-      <!-- 성경읽기 본문 넣을 자리 -->
-      <p>오늘의 성경 읽기 본문이 여기에 표시됩니다.</p>
-    </div>
+    <h2 id="reading-plan"></h2>
 
-    <h2>✏️ 묵상 노트</h2>
-    <textarea placeholder="오늘 말씀을 묵상하며 자유롭게 적어보세요..."></textarea>
+    <h3>묵상 노트</h3>
+    <textarea id="note"></textarea>
+    <button onclick="saveNote()">저장</button>
   </div>
 
   <script>
-    // 랜덤 배경 이미지
+    // 배경 이미지 랜덤
     const images = [
       "https://images.unsplash.com/photo-1501785888041-af3ef285b470", // 숲
       "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0", // 하늘
@@ -63,10 +67,40 @@
     const randomImage = images[Math.floor(Math.random() * images.length)];
     document.body.style.backgroundImage = `url('${randomImage}')`;
 
-    // 오늘 날짜 표시
+    // 맥체인 성경읽기 (패밀리 리딩, 예시: 1주일치)
+    const plan = {
+      "09-30": "열왕기상 2장, 갈라디아서 6장",
+      "10-01": "열왕기상 3장, 에베소서 1장",
+      "10-02": "열왕기상 4장, 에베소서 2장",
+      "10-03": "열왕기상 5장, 에베소서 3장",
+      "10-04": "열왕기상 6장, 에베소서 4장",
+      "10-05": "열왕기상 7장, 에베소서 5장",
+      "10-06": "열왕기상 8장, 에베소서 6장"
+    };
+
+    // 오늘 날짜 구하기
     const today = new Date();
-    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-    document.getElementById("today-date").innerText = today.toLocaleDateString("ko-KR", options);
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    const key = `${mm}-${dd}`;
+
+    document.getElementById("today-date").textContent =
+      `📖 오늘의 말씀 (${today.getFullYear()}년 ${mm}월 ${dd}일)`;
+    document.getElementById("reading-plan").textContent =
+      plan[key] ? plan[key] : "읽기표가 준비되지 않았습니다.";
+
+    // 묵상노트 저장하기 (브라우저 로컬 저장)
+    function saveNote() {
+      const note = document.getElementById("note").value;
+      localStorage.setItem("bibleNote-" + key, note);
+      alert("묵상 노트가 저장되었습니다 ✅");
+    }
+
+    // 페이지 열릴 때 저장된 노트 불러오기
+    const savedNote = localStorage.getItem("bibleNote-" + key);
+    if (savedNote) {
+      document.getElementById("note").value = savedNote;
+    }
   </script>
 </body>
 </html>
