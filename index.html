@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -61,8 +61,8 @@
 <body>
   <div class="overlay">
     <h1>📖 오늘의 성경읽기</h1>
-    <p class="date">2025년 9월 30일</p>
-    <p class="verse">열왕기상 2장<br>갈라디아서 6장</p>
+    <p class="date" id="today"></p>
+    <p class="verse" id="reading"></p>
 
     <h2>📝 오늘의 묵상</h2>
     <textarea id="note" placeholder="오늘 말씀을 묵상하며 기록해 보세요..."></textarea><br>
@@ -71,10 +71,28 @@
   </div>
 
   <script>
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    const noteKey = "note_" + today;
+    // 📅 오늘 날짜 표시
+    const today = new Date();
+    const dateStr = today.getFullYear() + "년 " + (today.getMonth()+1) + "월 " + today.getDate() + "일";
+    document.getElementById("today").textContent = dateStr;
 
-    // 페이지 로드 시 저장된 노트 불러오기
+    // 📖 맥체인 패밀리 플랜 (예시: 1주일치)
+    const readings = {
+      "2025-09-30": ["열왕기상 2장", "갈라디아서 6장"],
+      "2025-10-01": ["열왕기상 3장", "에베소서 1장"],
+      "2025-10-02": ["열왕기상 4장", "에베소서 2장"],
+      "2025-10-03": ["열왕기상 5장", "에베소서 3장"],
+      "2025-10-04": ["열왕기상 6장", "에베소서 4장"],
+      "2025-10-05": ["열왕기상 7장", "에베소서 5장"],
+      "2025-10-06": ["열왕기상 8장", "에베소서 6장"]
+    };
+
+    const todayKey = today.toISOString().split("T")[0];
+    const todayReading = readings[todayKey] || ["읽기표가 준비되지 않았습니다.", ""];
+    document.getElementById("reading").innerHTML = todayReading.join("<br>");
+
+    // 📝 묵상 노트 저장 (날짜별)
+    const noteKey = "note_" + todayKey;
     document.getElementById("note").value = localStorage.getItem(noteKey) || "";
 
     function saveNote() {
