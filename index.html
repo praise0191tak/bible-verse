@@ -2,11 +2,10 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>말씀 묵상</title>
+  <title>오늘의 말씀 & 묵상노트</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
       color: #333;
       text-align: center;
       margin: 0;
@@ -14,24 +13,18 @@
       background-size: cover;
       background-position: center;
     }
-    h1 {
-      margin-top: 20px;
-    }
     #reading-plan, #note-section {
-      background: rgba(255, 255, 255, 0.8);
-      padding: 20px;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 15px;
       border-radius: 10px;
       margin: 20px auto;
       max-width: 600px;
-      box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
-      text-align: left;
     }
     textarea {
       width: 100%;
       height: 150px;
-      padding: 10px;
       border-radius: 8px;
-      border: 1px solid #ccc;
+      padding: 10px;
       font-size: 14px;
     }
     button {
@@ -39,62 +32,35 @@
       padding: 10px 20px;
       border: none;
       border-radius: 8px;
-      background: #4CAF50;
+      background-color: #4CAF50;
       color: white;
       font-size: 14px;
       cursor: pointer;
     }
     button:hover {
-      background: #45a049;
+      background-color: #45a049;
     }
   </style>
 </head>
 <body>
-  <h1>오늘의 맥체인 성경읽기</h1>
+  <h1>📖 오늘의 말씀</h1>
 
-  <!-- 오늘의 말씀 표시 영역 -->
-  <div id="reading-plan"></div>
-
-  <!-- 묵상 노트 영역 -->
-  <div id="note-section">
-    <h2>묵상 노트</h2>
-    <textarea id="note" placeholder="오늘 묵상한 내용을 기록해 보세요..."></textarea>
-    <br>
-    <button onclick="saveNote()">저장</button>
-    <button onclick="clearNote()">삭제</button>
+  <!-- 오늘의 말씀 표시 -->
+  <div id="reading-plan">
+    <p>오늘의 성경 읽기:</p>
+    <p id="today-reading"></p>
   </div>
 
-  <!-- 스크립트 -->
+  <!-- 묵상 노트 -->
+  <div id="note-section">
+    <h2>✍ 묵상 노트</h2>
+    <textarea id="note" placeholder="오늘 말씀을 묵상하며 적어보세요..."></textarea><br>
+    <button onclick="saveNote()">저장하기</button>
+    <p id="saved-message" style="color: green; display: none;">저장되었습니다 ✅</p>
+  </div>
+
   <script>
-    // 맥체인 Family Reading (예시: 1주일치)
-    const readingPlan = {
-      "09-30": ["열왕기상 2장", "갈라디아서 6장"],
-      "10-01": ["열왕기상 3장", "에베소서 1장"],
-      "10-02": ["열왕기상 4장", "에베소서 2장"],
-      "10-03": ["열왕기상 5장", "에베소서 3장"],
-      "10-04": ["열왕기상 6장", "에베소서 4장"],
-      "10-05": ["열왕기상 7장", "에베소서 5장"],
-      "10-06": ["열왕기상 8장", "에베소서 6장"]
-    };
-
-    // 오늘 날짜 가져오기
-    const today = new Date();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    const key = `${month}-${day}`;
-
-    // 본문 표시
-    const readingDiv = document.getElementById("reading-plan");
-    if (readingPlan[key]) {
-      readingDiv.innerHTML = `
-        <h2>${month}/${day} 말씀</h2>
-        <p>${readingPlan[key][0]} , ${readingPlan[key][1]}</p>
-      `;
-    } else {
-      readingDiv.innerHTML = `<p>오늘의 읽기표가 준비되지 않았습니다.</p>`;
-    }
-
-    // 랜덤 배경
+    // 📌 랜덤 배경 이미지
     const images = [
       "https://images.unsplash.com/photo-1501785888041-af3ef285b470", // 숲
       "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0", // 하늘
@@ -103,25 +69,46 @@
     const randomImage = images[Math.floor(Math.random() * images.length)];
     document.body.style.backgroundImage = `url('${randomImage}')`;
 
-    // 묵상 노트 저장 기능 (브라우저에만 저장됨)
-    const noteKey = `note-${key}`; // 날짜별로 저장
-    const noteField = document.getElementById("note");
+    // 📌 맥체인 성경읽기표 (예시: 9월 30일부터 10월 6일까지)
+    const readingPlan = {
+      "09-30": "열왕기상 2장, 갈라디아서 6장",
+      "10-01": "열왕기상 3장, 에베소서 1장",
+      "10-02": "열왕기상 4장, 에베소서 2장",
+      "10-03": "열왕기상 5장, 에베소서 3장",
+      "10-04": "열왕기상 6장, 에베소서 4장",
+      "10-05": "열왕기상 7장, 에베소서 5장",
+      "10-06": "열왕기상 8장, 에베소서 6장"
+    };
 
-    // 저장된 노트 불러오기
-    if (localStorage.getItem(noteKey)) {
-      noteField.value = localStorage.getItem(noteKey);
+    function getTodayReading() {
+      const today = new Date();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      const key = `${month}-${day}`;
+      return readingPlan[key] || "📌 오늘의 읽기표가 아직 등록되지 않았습니다.";
     }
 
+    document.getElementById("today-reading").innerText = getTodayReading();
+
+    // 📌 묵상 노트 저장
     function saveNote() {
-      localStorage.setItem(noteKey, noteField.value);
-      alert("노트가 저장되었습니다.");
+      const note = document.getElementById("note").value;
+      const today = new Date().toISOString().split('T')[0]; // 날짜별 저장
+      localStorage.setItem("note-" + today, note);
+      document.getElementById("saved-message").style.display = "block";
+      setTimeout(() => {
+        document.getElementById("saved-message").style.display = "none";
+      }, 2000);
     }
 
-    function clearNote() {
-      localStorage.removeItem(noteKey);
-      noteField.value = "";
-      alert("노트가 삭제되었습니다.");
-    }
+    // 📌 저장된 묵상 불러오기
+    window.onload = () => {
+      const today = new Date().toISOString().split('T')[0];
+      const savedNote = localStorage.getItem("note-" + today);
+      if (savedNote) {
+        document.getElementById("note").value = savedNote;
+      }
+    };
   </script>
 </body>
 </html>
