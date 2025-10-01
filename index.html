@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>오늘의 말씀</title>
+  <title>오늘의 말씀 (맥체인 Family Reading)</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -10,9 +10,7 @@
       background-color: #f9f9f9;
       color: #333;
     }
-    h1 {
-      color: #2c3e50;
-    }
+    h1 { color: #2c3e50; }
     .verse-box {
       padding: 20px;
       background: #fff;
@@ -38,9 +36,7 @@
       border-radius: 8px;
       cursor: pointer;
     }
-    button:hover {
-      background: #2980b9;
-    }
+    button:hover { background: #2980b9; }
     .saved-note {
       margin-top: 20px;
       padding: 15px;
@@ -50,9 +46,10 @@
   </style>
 </head>
 <body>
-  <h1>오늘의 말씀</h1>
+  <h1>오늘의 말씀 (맥체인 Family Reading)</h1>
   <div class="verse-box" id="verse-box">
-    📖 오늘의 말씀: <span id="verse">요한복음 5:24 "내 말을 듣고 또 나 보내신 이를 믿는 자는 영생을 얻었고, 심판에 이르지 아니하나니 사망에서 생명으로 옮겼느니라"</span>
+    📖 오늘의 말씀: <br>
+    <span id="reading"></span>
   </div>
 
   <h2>오늘의 묵상</h2>
@@ -65,9 +62,32 @@
   </div>
 
   <script>
-    // 저장된 묵상 불러오기
+    // 9/30 ~ 10/6 Family Reading
+    const plan = {
+      "09-30": ["열왕기상 2장", "갈라디아서 6장"],
+      "10-01": ["열왕기상 3장", "에베소서 1장"],
+      "10-02": ["열왕기상 4장", "에베소서 2장"],
+      "10-03": ["열왕기상 5장", "에베소서 3장"],
+      "10-04": ["열왕기상 6장", "에베소서 4장"],
+      "10-05": ["열왕기상 7장", "에베소서 5장"],
+      "10-06": ["열왕기상 8장", "에베소서 6장"]
+    };
+
+    function getTodayKey() {
+      const today = new Date();
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const day = String(today.getDate()).padStart(2, "0");
+      return `${month}-${day}`;
+    }
+
+    // 오늘 날짜로 읽기표 표시
     window.onload = function() {
-      const saved = localStorage.getItem("todayNote");
+      const key = getTodayKey();
+      const reading = plan[key] || ["읽기표가 준비되지 않았습니다.", ""];
+      document.getElementById("reading").innerText = reading.join(" / ");
+
+      // 저장된 묵상 불러오기
+      const saved = localStorage.getItem("todayNote-" + key);
       if (saved) {
         document.getElementById("saved-note").style.display = "block";
         document.getElementById("saved-text").innerText = saved;
@@ -76,9 +96,10 @@
 
     // 묵상 저장
     function saveNote() {
+      const key = getTodayKey();
       const note = document.getElementById("note").value;
       if (note.trim() !== "") {
-        localStorage.setItem("todayNote", note);
+        localStorage.setItem("todayNote-" + key, note);
         document.getElementById("saved-note").style.display = "block";
         document.getElementById("saved-text").innerText = note;
         document.getElementById("note").value = "";
