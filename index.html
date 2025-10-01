@@ -2,111 +2,88 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>오늘의 말씀 (맥체인 Family Reading)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오늘의 성경읽기</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      margin: 40px;
-      background-color: #f9f9f9;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
+      background-size: cover;
       color: #333;
+      text-align: center;
+      padding: 40px;
     }
-    h1 { color: #2c3e50; }
-    .verse-box {
-      padding: 20px;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    .overlay {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    .verse {
+      font-size: 1.3em;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .date {
+      color: #555;
       margin-bottom: 20px;
     }
     textarea {
       width: 100%;
       height: 120px;
+      margin-top: 20px;
+      border-radius: 10px;
+      border: 1px solid #aaa;
       padding: 10px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      font-size: 1em;
       resize: none;
     }
     button {
-      margin-top: 10px;
+      margin-top: 15px;
       padding: 10px 20px;
-      background: #3498db;
-      color: #fff;
+      font-size: 1em;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
+      background-color: #2c3e50;
+      color: white;
       cursor: pointer;
     }
-    button:hover { background: #2980b9; }
-    .saved-note {
-      margin-top: 20px;
-      padding: 15px;
-      background: #ecf0f1;
-      border-radius: 8px;
+    button:hover {
+      background-color: #3e5871;
     }
   </style>
 </head>
 <body>
-  <h1>오늘의 말씀 (맥체인 Family Reading)</h1>
-  <div class="verse-box" id="verse-box">
-    📖 오늘의 말씀: <br>
-    <span id="reading"></span>
-  </div>
+  <div class="overlay">
+    <h1>📖 오늘의 성경읽기</h1>
+    <p class="date">2025년 9월 30일</p>
+    <p class="verse">열왕기상 2장<br>갈라디아서 6장</p>
 
-  <h2>오늘의 묵상</h2>
-  <textarea id="note" placeholder="오늘 말씀에 대한 묵상을 입력해 보세요..."></textarea><br>
-  <button onclick="saveNote()">저장하기</button>
-
-  <div class="saved-note" id="saved-note" style="display:none;">
-    <h3>저장된 묵상</h3>
-    <p id="saved-text"></p>
+    <h2>📝 오늘의 묵상</h2>
+    <textarea id="note" placeholder="오늘 말씀을 묵상하며 기록해 보세요..."></textarea><br>
+    <button onclick="saveNote()">저장하기</button>
+    <p id="savedMessage" style="color:green; display:none;">✔ 묵상이 저장되었습니다.</p>
   </div>
 
   <script>
-    // 9/30 ~ 10/6 Family Reading
-    const plan = {
-      "09-30": ["열왕기상 2장", "갈라디아서 6장"],
-      "10-01": ["열왕기상 3장", "에베소서 1장"],
-      "10-02": ["열왕기상 4장", "에베소서 2장"],
-      "10-03": ["열왕기상 5장", "에베소서 3장"],
-      "10-04": ["열왕기상 6장", "에베소서 4장"],
-      "10-05": ["열왕기상 7장", "에베소서 5장"],
-      "10-06": ["열왕기상 8장", "에베소서 6장"]
-    };
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const noteKey = "note_" + today;
 
-    function getTodayKey() {
-      const today = new Date();
-      const month = String(today.getMonth() + 1).padStart(2, "0");
-      const day = String(today.getDate()).padStart(2, "0");
-      return `${month}-${day}`;
-    }
+    // 페이지 로드 시 저장된 노트 불러오기
+    document.getElementById("note").value = localStorage.getItem(noteKey) || "";
 
-    // 오늘 날짜로 읽기표 표시
-    window.onload = function() {
-      const key = getTodayKey();
-      const reading = plan[key] || ["읽기표가 준비되지 않았습니다.", ""];
-      document.getElementById("reading").innerText = reading.join(" / ");
-
-      // 저장된 묵상 불러오기
-      const saved = localStorage.getItem("todayNote-" + key);
-      if (saved) {
-        document.getElementById("saved-note").style.display = "block";
-        document.getElementById("saved-text").innerText = saved;
-      }
-    };
-
-    // 묵상 저장
     function saveNote() {
-      const key = getTodayKey();
-      const note = document.getElementById("note").value;
-      if (note.trim() !== "") {
-        localStorage.setItem("todayNote-" + key, note);
-        document.getElementById("saved-note").style.display = "block";
-        document.getElementById("saved-text").innerText = note;
-        document.getElementById("note").value = "";
-        alert("묵상이 저장되었습니다!");
-      } else {
-        alert("묵상을 입력해주세요!");
-      }
+      const content = document.getElementById("note").value;
+      localStorage.setItem(noteKey, content);
+      document.getElementById("savedMessage").style.display = "block";
+      setTimeout(() => {
+        document.getElementById("savedMessage").style.display = "none";
+      }, 2000);
     }
   </script>
 </body>
