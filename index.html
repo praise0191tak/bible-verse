@@ -2,42 +2,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>묵상 노트</title>
+  <title>말씀 묵상</title>
   <style>
     body {
+      font-family: 'Arial', sans-serif;
+      color: #333;
+      text-align: center;
       margin: 0;
       padding: 0;
-      height: 100vh;
       background-size: cover;
       background-position: center;
-      font-family: Arial, sans-serif;
     }
-    .content {
-      background-color: rgba(255, 255, 255, 0.85);
-      margin: 20px;
+    h1 {
+      margin-top: 20px;
+    }
+    #reading-plan {
+      background: rgba(255, 255, 255, 0.8);
       padding: 20px;
       border-radius: 10px;
+      margin: 40px auto;
+      max-width: 600px;
+      box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 <body>
-  <div class="content">
-    <h1>오늘의 묵상</h1>
-    <p>오늘 읽을 말씀을 따라 묵상을 기록해 보세요 ✍️</p>
-    <textarea rows="10" style="width:100%;"></textarea>
+  <h1>오늘의 맥체인 성경읽기</h1>
+
+  <!-- 오늘의 말씀 표시 영역 -->
+  <div id="reading-plan">
+    <!-- 오늘의 말씀 표시될 곳 -->
   </div>
 
+  <!-- 스크립트 -->
   <script>
-    const images = [
-    "https://images.unsplash.com/photo-1501785888041-af3ef285b470", // 숲
-    "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0", // 하늘
-    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"  // 바다
-  ];
+    // 맥체인 Family Reading (예시: 1주일치)
+    const readingPlan = {
+      "09-30": ["열왕기상 2장", "갈라디아서 6장"],
+      "10-01": ["열왕기상 3장", "에베소서 1장"],
+      "10-02": ["열왕기상 4장", "에베소서 2장"],
+      "10-03": ["열왕기상 5장", "에베소서 3장"],
+      "10-04": ["열왕기상 6장", "에베소서 4장"],
+      "10-05": ["열왕기상 7장", "에베소서 5장"],
+      "10-06": ["열왕기상 8장", "에베소서 6장"]
+    };
 
-  const randomImage = images[Math.floor(Math.random() * images.length)];
-  document.body.style.backgroundImage = `url('${randomImage}')`;
-  document.body.style.backgroundSize = "cover";
-  document.body.style.backgroundPosition = "center";
-</script>  </script>
-  </body>
+    // 오늘 날짜 가져오기
+    const today = new Date();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    const key = `${month}-${day}`;
+
+    // 본문 표시
+    const readingDiv = document.getElementById("reading-plan");
+    if (readingPlan[key]) {
+      readingDiv.innerHTML = `
+        <h2>${month}/${day} 말씀</h2>
+        <p>${readingPlan[key][0]} , ${readingPlan[key][1]}</p>
+      `;
+    } else {
+      readingDiv.innerHTML = `<p>오늘의 읽기표가 준비되지 않았습니다.</p>`;
+    }
+
+    // 랜덤 배경
+    const images = [
+      "https://images.unsplash.com/photo-1501785888041-af3ef285b470", // 숲
+      "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0", // 하늘
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"  // 바다
+    ];
+    const randomImage = images[Math.floor(Math.random() * images.length)];
+    document.body.style.backgroundImage = `url('${randomImage}')`;
+  </script>
+</body>
 </html>
