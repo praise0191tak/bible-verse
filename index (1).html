@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>말씀 묵상</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    #verse-display {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 20px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    #reflection {
+      margin-top: 30px;
+      padding: 20px;
+      background: #fff;
+      border-left: 5px solid #4CAF50;
+      border-radius: 10px;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #reflection h2 {
+      margin-top: 0;
+      color: #4CAF50;
+    }
+    #reflection p {
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <h1>📖 오늘의 말씀</h1>
+  <div id="verse-display"></div>
+
+  <div id="reflection">
+    <h2>오늘의 묵상</h2>
+    <p>
+      여기에서 오늘 말씀을 묵상한 내용을 적어두세요.<br>
+      예: "요한복음 5:24 말씀을 통해 죽음에서 생명으로 옮겨진 은혜를 깊이 깨달았다."
+    </p>
+  </div>
+
+  <script>
+    const verses = [
+      "요한복음 5:24 — 내가 진실로 진실로 너희에게 이르노니...",
+      "요한복음 6:63 — 살리는 것은 영이니 육은 무익하니라...",
+      "로마서 8:1 — 그러므로 이제 그리스도 예수 안에 있는 자에게는 결코 정죄함이 없나니..."
+    ];
+
+    // 오늘 날짜에 맞게 고정된 말씀 보여주기
+    const today = new Date();
+    const index = today.getDate() % verses.length;
+    document.getElementById("verse-display").innerText = verses[index];
+  </script>
+</body>
+</html>
